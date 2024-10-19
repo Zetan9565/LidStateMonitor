@@ -3,5 +3,5 @@
 # 引用
  基于项目 https://github.com/boldwade/Wpf_LidCloseAndLock 修改
 # 功能
- ![image](https://github.com/user-attachments/assets/d0aee710-a2ec-4455-b9b4-bee4f2d46635)</br>
+ ![image](https://github.com/user-attachments/assets/b714e4c4-f748-4607-ace7-7983b8452e99)</br>
  可设置开盖和合盖后运行指定的可执行文件。
