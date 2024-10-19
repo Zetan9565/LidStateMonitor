@@ -20,13 +20,14 @@
         <TextBox x:Name="OpenArgs" HorizontalAlignment="Left" Margin="43,57,0,0" VerticalAlignment="Top" Width="199" Grid.ColumnSpan="2"/>
         <TextBox x:Name="CloseArgs" HorizontalAlignment="Left" Margin="43,122,0,0" VerticalAlignment="Top" Width="199" Grid.ColumnSpan="2"/>
         <Label Content="参数" HorizontalAlignment="Left" Margin="5,53,0,0" VerticalAlignment="Top"/>
-        <Label Content="参数" HorizontalAlignment="Left" Margin="5,116,0,0" VerticalAlignment="Top"/>
+        <Label Content="参数" HorizontalAlignment="Left" Margin="5,118,0,0" VerticalAlignment="Top"/>
         <Button x:Name="SaveBtn" Content="保存" HorizontalAlignment="Left" Margin="192,150,0,0" VerticalAlignment="Top" Grid.Column="1" Click="SaveBtn_Click"/>
         <CheckBox x:Name="AsAdmin" Content="管理员执行" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" ToolTip="是否以管理员身份运行可执行程序？"/>
         <Button x:Name="OpenTestBtn" Grid.Column="1" Content="测试" HorizontalAlignment="Left" Margin="192,56,0,0" VerticalAlignment="Top" Click="OpenTestBtn_Click"/>
         <Button x:Name="CloseTestBtn" Grid.Column="1" Content="测试" HorizontalAlignment="Left" Margin="192,121,0,0" VerticalAlignment="Top" Click="CloseTestBtn_Click"/>
         <CheckBox x:Name="NoWindow" Content="静默执行" HorizontalAlignment="Left" Margin="43,152,0,0" VerticalAlignment="Top" Grid.Column="1" ToolTip="是否静默执行？对于脚本类可执行程序，不勾选则会显示控制台。"/>
         <CheckBox x:Name="AutoRun" Content="开机自启" HorizontalAlignment="Left" Margin="119,152,0,0" VerticalAlignment="Top" Grid.Column="1" ToolTip="是否开机自启？" Checked="AutoRun_Checked" Unchecked="AutoRun_Unchecked"/>
+        <Label Grid.Column="1" Content="by Zetan9565" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Top" FontSize="9" Padding="5,5,0,5" HorizontalContentAlignment="Right"/>
 
     </Grid>
 </Window>
