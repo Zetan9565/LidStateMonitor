@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Windows;
 using Application = System.Windows.Forms.Application;
 
@@ -12,6 +14,55 @@ namespace LidStateMonitor
     {
         private const string shortcutPath = "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\盖子状态监测";
         private readonly bool pause;
+
+        private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+
+        private const uint FILE_READ_EA = 0x0008;
+        private const uint FILE_FLAG_BACKUP_SEMANTICS = 0x2000000;
+
+        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern uint GetFinalPathNameByHandle(IntPtr hFile, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpszFilePath, uint cchFilePath, uint dwFlags);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool CloseHandle(IntPtr hObject);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr CreateFile(
+                [MarshalAs(UnmanagedType.LPTStr)] string filename,
+                [MarshalAs(UnmanagedType.U4)] uint access,
+                [MarshalAs(UnmanagedType.U4)] FileShare share,
+                IntPtr securityAttributes, // optional SECURITY_ATTRIBUTES struct or IntPtr.Zero
+                [MarshalAs(UnmanagedType.U4)] FileMode creationDisposition,
+                [MarshalAs(UnmanagedType.U4)] uint flagsAndAttributes,
+                IntPtr templateFile);
+
+        private static string GetFinalPathName(string path)
+        {
+            var h = CreateFile(path,
+                FILE_READ_EA,
+                FileShare.ReadWrite | FileShare.Delete,
+                IntPtr.Zero,
+                FileMode.Open,
+                FILE_FLAG_BACKUP_SEMANTICS,
+                IntPtr.Zero);
+            if (h == INVALID_HANDLE_VALUE)
+                throw new Win32Exception();
+
+            try
+            {
+                var sb = new StringBuilder(1024);
+                var res = GetFinalPathNameByHandle(h, sb, 1024, 0);
+                if (res == 0)
+                    throw new Win32Exception();
+                sb.Replace("\\\\?\\", string.Empty);
+                return sb.ToString();
+            }
+            finally
+            {
+                CloseHandle(h);
+            }
+        }
 
         public SettingsBox()
         {
@@ -24,14 +75,18 @@ namespace LidStateMonitor
             AsAdmin.IsChecked = App.settings.AsAdmin;
             NoWindow.IsChecked = App.settings.NoWindow;
             pause = true;
-            var fi = new FileInfo(shortcutPath);
-            AutoRun.IsChecked = fi.Exists && fi.Attributes.HasFlag(FileAttributes.ReparsePoint);
+            AutoRun.IsChecked = CheckAutoRun();
             pause = false;
+        }
+
+        private static bool CheckAutoRun()
+        {
+            return new FileInfo(shortcutPath).Exists && GetFinalPathName(shortcutPath) == Application.ExecutablePath;
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (OpenPath.Text != App.settings.OpenPath || OpenArgs.Text != App.settings.OpenArgs || ClosePath.Text != App.settings.ClosePath || CloseArgs.Text != App.settings.CloseArgs || !AsAdmin.IsChecked.Equals(App.settings.AsAdmin) || !NoWindow.IsChecked.Equals(App.settings.NoWindow))
+            if (OpenPath.Text != App.settings.OpenPath || OpenArgs.Text != App.settings.OpenArgs || ClosePath.Text != App.settings.ClosePath || CloseArgs.Text != App.settings.CloseArgs || AsAdmin.IsChecked != App.settings.AsAdmin || NoWindow.IsChecked != App.settings.NoWindow)
                 if (MessageBox.Show("修改尚未保存，确定退出吗？", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.Cancel) == MessageBoxResult.Cancel) e.Cancel = true;
         }
 
@@ -108,7 +163,7 @@ namespace LidStateMonitor
         {
             if (pause) return;
             var fi = new FileInfo(shortcutPath);
-            if (!fi.Exists || !fi.Attributes.HasFlag(FileAttributes.ReparsePoint))
+            if (!fi.Exists || !CheckAutoRun())
             {
                 var process = new Process();
                 process.StartInfo.FileName = "cmd.exe";
@@ -127,8 +182,7 @@ namespace LidStateMonitor
         private void AutoRun_Unchecked(object sender, RoutedEventArgs e)
         {
             if (pause) return;
-            var fi = new FileInfo(shortcutPath);
-            if (fi.Exists && fi.Attributes.HasFlag(FileAttributes.ReparsePoint))
+            if (CheckAutoRun())
             {
                 var process = new Process();
                 process.StartInfo.FileName = "cmd.exe";

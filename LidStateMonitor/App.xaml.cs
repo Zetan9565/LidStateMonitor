@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 using Application = System.Windows.Forms.Application;
@@ -38,7 +39,7 @@ namespace LidStateMonitor
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
-            new System.Threading.Mutex(true, "ZetanStudio.LidStateMonitor", out bool ret);
+            new Mutex(true, Process.GetCurrentProcess().ProcessName, out bool ret);
             if (!ret)
             {
                 MessageBox.Show("已经有一个实例在运行", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -61,7 +62,6 @@ namespace LidStateMonitor
                 }
                 else settings = new Settings();
             }
-            catch (FileNotFoundException) { settings = new Settings(); }
             catch { settings = new Settings(); }
         }
 
@@ -135,10 +135,10 @@ namespace LidStateMonitor
     [Serializable]
     public class Settings
     {
-        public string OpenPath;
-        public string OpenArgs;
-        public string ClosePath;
-        public string CloseArgs;
+        public string OpenPath = string.Empty;
+        public string OpenArgs = string.Empty;
+        public string ClosePath = string.Empty;
+        public string CloseArgs = string.Empty;
         public bool AsAdmin;
         public bool NoWindow;
     }
