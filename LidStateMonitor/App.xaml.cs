@@ -31,14 +31,14 @@ namespace LidStateMonitor
         private const int WmPowerbroadcast = 0x0218;
         private const int PbtPowersettingchange = 0x8013;
 
-        private bool? prevLidStatus;
+        private bool? prevLidState;
 
         public static Settings settings = new Settings();
         public static string SettingsPath => Path.Combine(Path.GetFileNameWithoutExtension(Application.ExecutablePath) + "Settings");
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
-            new System.Threading.Mutex(true, "ZetanStudio.LidStatusMonitor", out bool ret);
+            new System.Threading.Mutex(true, "ZetanStudio.LidStateMonitor", out bool ret);
             if (!ret)
             {
                 MessageBox.Show("已经有一个实例在运行", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -96,12 +96,12 @@ namespace LidStateMonitor
 
             var isLidOpen = ps.Data != 0;
 
-            if (!isLidOpen == prevLidStatus) LidStatusChanged(isLidOpen);
+            if (!isLidOpen == prevLidState) OnLidStateChanged(isLidOpen);
 
-            prevLidStatus = isLidOpen;
+            prevLidState = isLidOpen;
         }
 
-        public static void LidStatusChanged(bool isLidOpen)
+        public static void OnLidStateChanged(bool isLidOpen)
         {
             if (isLidOpen) Execute(settings.OpenPath, settings.OpenArgs);
             else Execute(settings.ClosePath, settings.CloseArgs);
@@ -126,7 +126,7 @@ namespace LidStateMonitor
             }
             catch (Exception e)
             {
-                MessageBox.Show($"LidStatusMonitor: {e.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"LidStateMonitor: {e.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 process.Close();
             }
         }

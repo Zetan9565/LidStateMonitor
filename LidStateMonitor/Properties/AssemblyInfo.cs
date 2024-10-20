@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("LidStatusMonitor")]
-[assembly: AssemblyDescription("笔记本盖子开启关闭检测器。")]
+[assembly: AssemblyTitle("LidStateMonitor")]
+[assembly: AssemblyDescription("笔记本盖子开合状态监测器。")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Zetan Studio")]
-[assembly: AssemblyProduct("LidStatusMonitor")]
+[assembly: AssemblyProduct("LidStateMonitor")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
