@@ -1,7 +1,7 @@
-﻿<Application x:Class="LidStatusMonitor.App"
+﻿<Application x:Class="LidStateMonitor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:LidStatusMonitor"
+             xmlns:local="clr-namespace:LidStateMonitor"
              Exit="App_OnExit"
              Startup="App_OnStartup"
              >

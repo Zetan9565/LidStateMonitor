@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using Application = System.Windows.Forms.Application;
 
-namespace LidStatusMonitor
+namespace LidStateMonitor
 {
     public partial class SettingsBox
     {

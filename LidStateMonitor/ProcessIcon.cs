@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using LidStatusMonitor.Properties;
+using LidStateMonitor.Properties;
 
-namespace LidStatusMonitor
+namespace LidStateMonitor
 {
     internal class ProcessIcon : IDisposable
     {

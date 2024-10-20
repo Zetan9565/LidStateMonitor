@@ -1,8 +1,8 @@
-﻿using LidStatusMonitor.Properties;
+﻿using LidStateMonitor.Properties;
 using System;
 using System.Windows.Forms;
 
-namespace LidStatusMonitor
+namespace LidStateMonitor
 {
     public class ContextMenus
     {

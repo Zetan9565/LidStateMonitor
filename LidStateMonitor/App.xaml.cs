@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Interop;
 using Application = System.Windows.Forms.Application;
 
-namespace LidStatusMonitor
+namespace LidStateMonitor
 {
     /// <summary>
     /// Interaction logic for App.xaml
